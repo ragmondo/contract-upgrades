@@ -1,4 +1,4 @@
-package com.template
+package com.upgrade
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
@@ -21,9 +21,12 @@ import net.corda.testing.driver.driver
  * 5. Run the "Debug CorDapp" remote debug run configuration.
  */
 fun main(args: Array<String>) {
-    // No permissions required as we are not invoking flows.
-    val user = User("user1", "test", permissions = setOf())
-    driver(isDebug = true) {
+    val user = User("user1", "test", permissions = setOf(
+            "StartFlow.com.upgrade.Initiator",
+            "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Authorise",
+            "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Initiate"))
+
+    driver(isDebug = true, startNodesInProcess = true) {
         val (_, nodeA, nodeB) = listOf(
                 startNode(providedName = CordaX500Name("Controller", "London", "GB"), advertisedServices = setOf(ServiceInfo(ValidatingNotaryService.type))),
                 startNode(providedName = CordaX500Name("PartyA", "London", "GB"), rpcUsers = listOf(user)),

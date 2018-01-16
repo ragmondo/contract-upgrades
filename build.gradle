@@ -120,7 +120,11 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
                 "$project.group:cordapp:$project.version",
                 "$project.group:cordapp-new-contract:$project.version"
         ]
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": [
+                "StartFlow.com.upgrade.Initiator",
+                "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Authorise",
+                "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Initiate"
+        ]]]
     }
     node {
         name "O=PartyB,L=New York,C=US"
@@ -133,12 +137,16 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
                 "$project.group:cordapp:$project.version",
                 "$project.group:cordapp-new-contract:$project.version"
         ]
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": []]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": [
+                "StartFlow.com.upgrade.Initiator",
+                "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Authorise",
+                "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Initiate"
+        ]]]
     }
 }
 
 task runTemplateClient(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.template.ClientKt'
-    args 'localhost:10006'
+    args = ['localhost:10006', 'localhost:10009']
 }

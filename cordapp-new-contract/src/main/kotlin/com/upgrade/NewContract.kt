@@ -1,4 +1,4 @@
-package com.template
+package com.upgrade
 
 import net.corda.core.contracts.TypeOnlyCommandData
 import net.corda.core.contracts.UpgradedContract
@@ -8,7 +8,7 @@ import net.corda.core.transactions.LedgerTransaction
 // We're not upgrading the state, so we pass the same state as the input and output state.
 open class NewContract : UpgradedContract<State, State> {
     companion object {
-        val id = "com.template.NewContract"
+        val id = "com.upgrade.NewContract"
     }
 
     override val legacyContract = OldContract.id

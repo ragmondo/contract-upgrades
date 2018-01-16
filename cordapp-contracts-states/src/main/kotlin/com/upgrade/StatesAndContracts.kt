@@ -1,4 +1,4 @@
-package com.template
+package com.upgrade
 
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.ContractState
@@ -12,7 +12,7 @@ data class State(val a: AbstractParty, val b: AbstractParty) : ContractState {
 
 open class OldContract : Contract {
     companion object {
-        val id = "com.template.OldContract"
+        val id = "com.upgrade.OldContract"
     }
 
     override fun verify(tx: LedgerTransaction) {}
