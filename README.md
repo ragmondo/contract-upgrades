@@ -1,6 +1,6 @@
 ![Corda](https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png)
 
-# Blacklist CorDapp
+# Contract Upgrades CorDapp
 
 This CorDapp shows the end-to-end process of upgrading contracts in Corda.
 
