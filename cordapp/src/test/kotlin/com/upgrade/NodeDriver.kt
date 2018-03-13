@@ -2,10 +2,9 @@ package com.upgrade
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.utilities.getOrThrow
-import net.corda.node.services.transactions.ValidatingNotaryService
-import net.corda.nodeapi.User
-import net.corda.nodeapi.internal.ServiceInfo
+import net.corda.testing.driver.DriverParameters
 import net.corda.testing.driver.driver
+import net.corda.testing.node.User
 
 /**
  * This file is exclusively for being able to run your nodes through an IDE (as opposed to using deployNodes)
@@ -21,20 +20,14 @@ import net.corda.testing.driver.driver
  * 5. Run the "Debug CorDapp" remote debug run configuration.
  */
 fun main(args: Array<String>) {
-    val user = User("user1", "test", permissions = setOf(
-            "StartFlow.com.upgrade.Initiator",
-            "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Authorise",
-            "StartFlow.net.corda.core.flows.ContractUpgradeFlow\$Initiate"))
+    val user = User("user1", "test", permissions = setOf("ALL"))
 
-    driver(isDebug = true, startNodesInProcess = true) {
-        val (_, nodeA, nodeB) = listOf(
-                startNode(providedName = CordaX500Name("Controller", "London", "GB"), advertisedServices = setOf(ServiceInfo(ValidatingNotaryService.type))),
+    driver(DriverParameters(isDebug = true, startNodesInProcess = true, waitForAllNodesToFinish = true)) {
+        val (nodeA, nodeB) = listOf(
                 startNode(providedName = CordaX500Name("PartyA", "London", "GB"), rpcUsers = listOf(user)),
                 startNode(providedName = CordaX500Name("PartyB", "New York", "US"), rpcUsers = listOf(user))).map { it.getOrThrow() }
 
         startWebserver(nodeA)
         startWebserver(nodeB)
-
-        waitForAllNodesToFinish()
     }
 }

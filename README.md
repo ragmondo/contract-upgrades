@@ -31,7 +31,9 @@ Run the following command from the project's root folder:
 * Unix/Mac OSX: `./gradlew runUpgradeContractClient`
 * Windows: `gradlew runUpgradeContractClient`
 
-This will run the contract upgrade client defined here: https://github.com/joeldudleyr3/contract-upgrades/blob/master/cordapp/src/main/kotlin/com/upgrade/Client.kt. This client will:
+This will run the contract upgrade client defined here:
+https://github.com/joeldudleyr3/contract-upgrades/blob/master/cordapp/src/main/kotlin/com/upgrade/Client.kt. This
+client will:
 
 1. Connect to PartyA and PartyB's nodes via RPC
 2. Issue a state with the old contract
@@ -42,7 +44,7 @@ This will run the contract upgrade client defined here: https://github.com/joeld
 You should see a message of the form:
 
     ```I 17:41:35 1 UpgradeContractClient.main - TransactionState(data=State(a=C=GB,L=London,O=PartyA, b=C=US,L=New 
-    York,O=PartyB), contract=com.upgrade.NewContract, notary=C=GB,L=London,O=Controller,CN=corda.notary.validating, 
+    York,O=PartyB), contract=com.upgrade.NewContract, notary=C=GB,L=London,O=Notary,CN=corda.notary.validating,
     encumbrance=null, constraint=HashAttachmentConstraint(attachmentId=670BD1385F920D5F87FA9F42FAA2DE86E31F1CAD...))```
 
 # To-Do
