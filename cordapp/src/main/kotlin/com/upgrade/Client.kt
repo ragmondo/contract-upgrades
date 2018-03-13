@@ -34,6 +34,7 @@ private class UpgradeContractClient {
         val partyBIdentity = partyBProxy.nodeInfo().legalIdentities.first()
         partyAProxy.startFlowDynamic(Initiator::class.java, partyBIdentity)
 
+        Thread.sleep(5000)
         // Authorise the upgrade of all the State instances using OldContract.
         listOf(partyAProxy, partyBProxy).forEach { proxy ->
             // Extract all the unconsumed State instances from the vault.
@@ -47,6 +48,7 @@ private class UpgradeContractClient {
                         NewContract::class.java)
             }
         }
+        Thread.sleep(5000)
 
         // Initiate the upgrade of all the State instances using OldContract.
         partyAProxy.vaultQuery(State::class.java).states.forEach { stateAndRef ->
