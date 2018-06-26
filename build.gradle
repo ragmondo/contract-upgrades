@@ -65,7 +65,6 @@ dependencies {
 
     // Corda integration dependencies
     cordaCompile "$corda_release_group:corda-core:$corda_release_version"
-    cordaCompile "$corda_release_group:corda-finance:$corda_release_version"
     cordaCompile "$corda_release_group:corda-jackson:$corda_release_version"
     cordaCompile "$corda_release_group:corda-rpc:$corda_release_version"
     cordaCompile "$corda_release_group:corda-node-api:$corda_release_version"
@@ -77,11 +76,9 @@ dependencies {
 
     // CorDapp dependencies
     // Specify your CorDapp's dependencies below, including dependent CorDapps.
-    // We've defined Cash as a dependent CorDapp as an example.
     cordapp project(":cordapp")
     cordapp project(":cordapp-contracts-states")
     cordapp project("cordapp-new-contract")
-    cordapp "$corda_release_group:corda-finance:$corda_release_version"
 }
 
 task integrationTest(type: Test, dependsOn: []) {
@@ -104,6 +101,10 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         name "O=Notary,L=London,C=GB"
         notary = [validating : true]
         p2pPort 10002
+        rpcSettings {
+            address("localhost:10003")
+            adminAddress("localhost:10043")
+        }
         cordapps = [
                 "$project.group:cordapp-contracts-states:$project.version",
                 "$project.group:cordapp:$project.version",
@@ -117,7 +118,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             address("localhost:10006")
             adminAddress("localhost:10046")
         }
-//        webPort 10007
         cordapps = [
                 "$project.group:cordapp-contracts-states:$project.version",
                 "$project.group:cordapp:$project.version",
@@ -132,7 +132,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
             address("localhost:10009")
             adminAddress("localhost:10049")
         }
-//        webPort 10010
         cordapps = [
                 "$project.group:cordapp-contracts-states:$project.version",
                 "$project.group:cordapp:$project.version",
