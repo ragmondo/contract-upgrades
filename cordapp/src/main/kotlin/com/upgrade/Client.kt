@@ -41,22 +41,29 @@ private class UpgradeContractClient {
             val stateAndRefs = proxy.vaultQuery(State::class.java).states
 
             // Run the upgrade flow for each one.
-            stateAndRefs.forEach { stateAndRef ->
-                proxy.startFlowDynamic(
-                        ContractUpgradeFlow.Authorise::class.java,
-                        stateAndRef,
-                        NewContract::class.java)
-            }
+            stateAndRefs
+                    .filter { stateAndRef ->
+                        stateAndRef.state.contract.equals(OldContract.id)
+                    }.forEach { stateAndRef ->
+                        proxy.startFlowDynamic(
+                                ContractUpgradeFlow.Authorise::class.java,
+                                stateAndRef,
+                                NewContract::class.java)
+                    }
         }
         Thread.sleep(5000)
 
         // Initiate the upgrade of all the State instances using OldContract.
-        partyAProxy.vaultQuery(State::class.java).states.forEach { stateAndRef ->
-            partyAProxy.startFlowDynamic(
-                    ContractUpgradeFlow.Initiate::class.java,
-                    stateAndRef,
-                    NewContract::class.java)
-        }
+        partyAProxy.vaultQuery(State::class.java).states
+                .filter { stateAndRef ->
+                    stateAndRef.state.contract.equals(OldContract.id)
+                }
+                .forEach { stateAndRef ->
+                    partyAProxy.startFlowDynamic(
+                            ContractUpgradeFlow.Initiate::class.java,
+                            stateAndRef,
+                            NewContract::class.java)
+                }
 
         // Give the node the time to run the contract upgrade flows.
         Thread.sleep(10000)
