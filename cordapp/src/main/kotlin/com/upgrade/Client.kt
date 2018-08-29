@@ -2,8 +2,11 @@ package com.upgrade
 
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.core.flows.ContractUpgradeFlow
+import net.corda.core.node.services.Vault
+import net.corda.core.node.services.vault.QueryCriteria
 import net.corda.core.utilities.NetworkHostAndPort.Companion.parse
 import net.corda.core.utilities.loggerFor
+import org.hibernate.Criteria
 import org.slf4j.Logger
 
 fun main(args: Array<String>) {
@@ -32,7 +35,10 @@ private class UpgradeContractClient {
 
         // Issue a State that uses OldContract onto the ledger.
         val partyBIdentity = partyBProxy.nodeInfo().legalIdentities.first()
-        partyAProxy.startFlowDynamic(Initiator::class.java, partyBIdentity)
+
+        repeat(10) {
+            partyAProxy.startFlowDynamic(Initiator::class.java, partyBIdentity)
+        }
 
         Thread.sleep(5000)
         // Authorise the upgrade of all the State instances using OldContract.
@@ -69,6 +75,15 @@ private class UpgradeContractClient {
         Thread.sleep(10000)
 
         // Log all the State instances in the vault to show they are using NewContract.
+        logger.info("-----")
         partyAProxy.vaultQuery(State::class.java).states.forEach { logger.info("{}", it.state) }
+        partyAProxy.vaultQuery(NewState::class.java).states.forEach { logger.info("{}", it.state) }
+
+        logger.info("----- CONSUMED STATES ----")
+        partyAProxy.vaultQueryByCriteria(QueryCriteria.VaultQueryCriteria(status = Vault.StateStatus.CONSUMED),
+                State::class.java).states.forEach { logger.info("{}", it.state) }
+
+
+
     }
 }
